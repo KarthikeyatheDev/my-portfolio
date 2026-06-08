@@ -1,72 +1,99 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
-const experiences = [
+interface Experience {
+  role: string;
+  company: string;
+  duration: string;
+  type: string;
+  description: string[];
+}
+
+const EXPERIENCES: Experience[] = [
   {
-    role: "NLP Engineer",
-    company: "Chakralaya Analytics (Startup)",
-    period: "Aug 2025 – Present",
-    points: [
-      "Aggregated and processed unstructured data from 20+ sources for a new SLM product",
-      "Designed a working architecture for an SLM-based product",
-    ],
-  },
-  {
-    role: "Project Intern",
+    role: "Project Engineer",
     company: "Samsung PRISM",
-    period: "Aug 2025 – Present",
-    points: [
-      "Developed a plugin using LLMs and Parsing trees for Android Studio",
-      "Successfully tested the plugin on an existing open-source Android app with 80% accuracy",
+    duration: "Aug 2025 – Apr 2026",
+    type: "Internship",
+    description: [
+      "Developed an AI-powered Android Studio plugin to convert XML layouts into Jetpack Compose code for faster UI migration workflows",
+      "Built parsing and code generation pipelines for automated UI transformation and component mapping",
+      "Working on improving conversion accuracy and handling complex nested UI structure."
     ],
   },
 ];
 
-const ExperienceSection = () => {
+const ExperienceCard = ({ exp, index }: { exp: Experience; index: number }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section id="experience" className="section-padding max-w-7xl mx-auto" ref={ref}>
-      <motion.div
-        initial={{ opacity: 0, x: -40 }}
-        animate={inView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.7 }}
-      >
-        <p className="mono text-primary text-sm tracking-widest mb-4">02 — EXPERIENCE</p>
-        <h2 className="text-4xl md:text-6xl font-bold mb-16">
-          Where I've <span className="text-gradient">built</span> things.
-        </h2>
-      </motion.div>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -24 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      className="relative pl-8"
+    >
+      {/* Timeline dot */}
+      <div className="absolute left-0 top-1 w-3 h-3 rounded-full border-2 border-neutral-900 dark:border-white bg-white dark:bg-neutral-900" />
 
-      <div className="space-y-0">
-        {experiences.map((exp, i) => (
-          <motion.div
-            key={exp.company}
-            initial={{ opacity: 0, y: 50 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 * (i + 1) }}
-            className="group border-t border-border/50 py-10 md:py-14 hover:bg-card/30 transition-colors duration-500 px-4 -mx-4 rounded-lg"
-          >
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-              <div>
-                <h3 className="text-2xl md:text-3xl font-semibold group-hover:text-primary transition-colors duration-300">
-                  {exp.role}
-                </h3>
-                <p className="text-muted-foreground text-lg">{exp.company}</p>
-              </div>
-              <span className="mono text-sm text-muted-foreground shrink-0">{exp.period}</span>
-            </div>
-            <ul className="space-y-3 max-w-2xl">
-              {exp.points.map((point, j) => (
-                <li key={j} className="flex gap-3 text-secondary-foreground">
-                  <span className="text-primary mt-1.5 text-xs">▸</span>
-                  {point}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        ))}
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-sm transition-all duration-300">
+        <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+          <h3 className="text-base font-semibold text-neutral-900 dark:text-white">{exp.role}</h3>
+          <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-0.5 rounded-full">
+            {exp.type}
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{exp.company}</span>
+          <span className="text-neutral-300 dark:text-neutral-600">·</span>
+          <span className="text-sm text-neutral-400 dark:text-neutral-500">{exp.duration}</span>
+        </div>
+        <ul className="space-y-2">
+          {exp.description.map((point, i) => (
+            <li key={i} className="flex gap-3 text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+              <span className="text-neutral-300 dark:text-neutral-600 mt-1 shrink-0">—</span>
+              {point}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </motion.div>
+  );
+};
+
+const ExperienceSection = () => {
+  const titleRef = useRef(null);
+  const inView = useInView(titleRef, { once: true });
+
+  return (
+    <section id="experience" className="py-24 px-6 bg-neutral-50 dark:bg-neutral-950/50">
+      <div className="max-w-3xl mx-auto">
+        <motion.div
+          ref={titleRef}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-14"
+        >
+          <p className="text-xs font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3">Career</p>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white">
+            Experience
+          </h2>
+        </motion.div>
+
+        {/* Timeline */}
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute left-[5px] top-2 bottom-2 w-px bg-neutral-200 dark:bg-neutral-800" />
+
+          <div className="space-y-6">
+            {EXPERIENCES.map((exp, i) => (
+              <ExperienceCard key={exp.role + exp.company} exp={exp} index={i} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
